@@ -9,7 +9,17 @@ import com.theokanning.openai.completion.CompletionRequest;
 
 public class OpenAiTester {
     public static void main(String[] args) {
-	String preface = "如果以下段落在描述訓練,預測一週後, 同樣次數可完成的重量,如果在描述飲食,列出食物名稱,還有這些食物的營養成分。中間要空行並整理成JSON格式";
+	String preface = "For the below message, please give me your feedback according to some conditions:\n"
+		+ "If it is the description of the training log, please give me the advice for future training, the message type should be \"trainingLog\".\n"
+		+ "If it is about the food, please specify the ingredient and nutrient content of the food being mentioned in the message, the message type should be \"diet\".\n"
+		+ "If it is a question, just answer it in your opinion the message type should be \"question\".\n"
+		+ "Otherwise, just return the original message, the message type should be \"other\".\n"
+		+ "Please reply only to the matched condition.\n"
+		+ "Please reply in the JSON format as below, and write the answer to the key: \"openAIfeedback\", write the message type to the key: \"messageType\".\n"
+		+ "\n"
+		+ "If there has any word in chinese, Please reply in traditional chinese, otherwise, just reply in the language message usage. \n"
+		+ "\n" + "{\n" + "    \"messageType\": “message “type,\n"
+		+ "    \"openAIfeedback\": \"your feedback\"\n" + "}\n" + "";
 	String instruction = args[0];
 	String prompt = preface + "\n" + instruction;
 	OpenAiService service = new OpenAiService("",
@@ -22,7 +32,7 @@ public class OpenAiTester {
 		try {
 		    Answer answer = new ObjectMapper().readValue(t.getText(), Answer.class);
 		    System.out.println(answer.toString());
-		} catch (JsonProcessingException e) { 
+		} catch (JsonProcessingException e) {
 		    e.printStackTrace();
 		}
 		System.out.println(t);
